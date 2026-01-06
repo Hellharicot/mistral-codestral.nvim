@@ -1,49 +1,53 @@
 # Changelog
 
-## [Unreleased] - 2026-01-03
+All notable changes to this project will be documented in this file.
 
-### Removed
-- Removed outdated `test-report.md` (snapshot no longer relevant)
-- Removed legacy `reference.md` (replaced by CONFIGURATION.md)
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### Changed
-- Consolidated testing documentation to reduce ~40% redundancy
-- Updated all cross-references to removed files
-- Abstracted hardcoded plugin paths to `<plugin-dir>` convention
-- Improved docs/README.md navigation structure
-- Enhanced cross-linking between troubleshooting resources
+## [Unreleased]
 
-### Documentation
-- quick-start.md: Streamlined to true "30-second" verification (~140 lines)
-- testing-guide.md: Enhanced with cross-references to related docs
-- All docs follow DRY principle with strategic cross-references
-
----
-
-## [Unreleased] - 2025-10-31
-
-### Fixed
-- **CRITICAL FIX**: Response parsing bug in `init.lua` line 496
-  - **Issue**: Plugin was looking for `response.choices[1].text` but Mistral API returns completions in `response.choices[1].message.content`
-  - **Symptom**: No completions appeared (neither automatic nor manual trigger)
-  - **Fix**: Updated response parsing to handle both formats:
-    ```lua
-    local completion = choice.text or (choice.message and choice.message.content)
-    ```
-  - **Impact**: Completions now work correctly for all users
+## [0.0.0] - 2026-01-03
 
 ### Added
-- Comprehensive diagnostic scripts in `scripts/`:
-  - `debug_completion.lua` - Full diagnostic check (run with `:DiagnoseMistral`)
-  - `direct_test.lua` - Step-by-step verification test
-  - `verify_fix.lua` - Verify the response parsing fix works
+- Initial mistral-codestral.nvim plugin release
+- Intelligent code completion using Mistral Codestral API
+- Support for blink.cmp and nvim-cmp completion engines
+- Virtual text inline suggestions (GitHub Copilot style)
+- Context-aware completions via LSP integration
+- Smart caching for repeated completions (5-second TTL)
+- Buffer and filetype exclusions (help, neo-tree, terminals)
+- Non-blocking async API calls with configurable timeout
+- Comprehensive diagnostic scripts:
+  - `debug_completion.lua` - Full diagnostic check (`:DiagnoseMistral`)
+  - `direct_test.lua` - Step-by-step verification
+  - `verify_fix.lua` - Verify response parsing fix
   - `diagnose.sh` - Quick command-line diagnostic
-- Enhanced test fixtures:
-  - `step-by-step-test.js` - Detailed testing instructions
-- Documentation improvements:
-  - `TROUBLESHOOTING.md` - Common issues and solutions
-  - `ORGANIZATION.md` - File structure documentation
-  - `CHANGELOG.md` - This file
+- Full test suite (integration, plugin, API tests)
+- Health check command (`:checkhealth mistral-codestral`)
+- Complete documentation suite in `/docs`:
+  - Architecture documentation with flow diagrams
+  - Configuration guide
+  - Virtual text mode documentation
+  - Completion engines setup guide
+  - Troubleshooting guide
+  - Quick start guide
+  - Testing guide
+
+### Fixed
+- Response parsing bug in API handling
+  - Issue: Plugin was looking for `response.choices[1].text` but Mistral API returns completions in `response.choices[1].message.content`
+  - Fix: Updated response parsing to handle both formats for compatibility
+  - Impact: Completions now work correctly for all users
+
+### Documentation
+- Streamlined quick-start.md to true "30-second" verification
+- Enhanced testing-guide.md with cross-references
+- Consolidated testing documentation to reduce ~40% redundancy
+- Improved docs/README.md navigation structure
+- All docs follow DRY principle with strategic cross-references
+- Abstracted hardcoded plugin paths to `<plugin-dir>` convention
+- Enhanced cross-linking between troubleshooting resources
 
 ### Changed
 - Organized all test files and documentation into proper structure:
@@ -52,54 +56,5 @@
   - `scripts/` - Utility scripts
 - Updated main README with testing section
 - Improved error handling in diagnostic scripts
-
-## Verification
-
-To verify the fix works after updating:
-
-```bash
-# Method 1: Quick verification
-nvim -u ~/.config/nvim/init.lua \
-  -c "luafile ~/.config/nvim/lua/mistral-codestral/scripts/verify_fix.lua"
-
-# Method 2: Full diagnostic
-nvim -u ~/.config/nvim/init.lua \
-  -c "luafile ~/.config/nvim/lua/mistral-codestral/scripts/direct_test.lua"
-
-# Method 3: Manual test
-nvim ~/.config/nvim/lua/mistral-codestral/tests/fixtures/step-by-step-test.js
-# Then: Type "a + " after "return" and wait
-```
-
-## API Response Format
-
-For reference, Mistral Codestral API returns:
-
-```json
-{
-  "choices": [{
-    "index": 0,
-    "message": {
-      "content": "a + b;"
-    }
-  }]
-}
-```
-
-Some documentation suggested it returns:
-```json
-{
-  "choices": [{
-    "text": "a + b;"
-  }]
-}
-```
-
-The fix now handles **both formats** to ensure compatibility.
-
----
-
-**Date**: 2025-10-31
-**Affected Files**: `init.lua` line 496
-**Severity**: Critical (completions didn't work at all)
-**Status**: ✅ Fixed
+- Removed outdated `test-report.md` (snapshot no longer relevant)
+- Removed legacy `reference.md` (replaced by CONFIGURATION.md)

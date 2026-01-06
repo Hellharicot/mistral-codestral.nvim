@@ -1,0 +1,26 @@
+{
+  "release-type": "simple",
+  "packages": {
+    ".": {
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        "lua/mistral-codestral/init.lua"
+      ]
+    }
+  },
+  "bump-minor-pre-major": true,
+  "bump-patch-for-minor-pre-major": false,
+  "versioning": "default",
+  "tag-separator": "",
+  "include-component-in-tag": false,
+  "pull-request-title-pattern": "chore: release v${version}",
+  "changelog-sections": [
+    {"type": "feat", "section": "Features"},
+    {"type": "fix", "section": "Bug Fixes"},
+    {"type": "perf", "section": "Performance Improvements"},
+    {"type": "docs", "section": "Documentation"},
+    {"type": "test", "section": "Tests"},
+    {"type": "refactor", "section": "Code Refactoring"},
+    {"type": "chore", "section": "Miscellaneous", "hidden": true}
+  ]
+}

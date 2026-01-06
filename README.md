@@ -43,6 +43,32 @@ chmod 600 ~/.mistral_codestral_key
 - **Press `<C-c>`** → Clear suggestion
 - **`:MistralCodestralComplete`** → Manual trigger
 
+### 4. Version Pinning (Recommended)
+
+For stability in production, pin to a specific version:
+
+```lua
+return {
+  "jrollin/mistral-codestral.nvim",
+  tag = "v0.1.0",  -- Pin to specific version
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    "saghen/blink.cmp",
+  },
+  config = function()
+    require("mistral-codestral").setup({...})
+  end,
+}
+```
+
+Or use version ranges:
+
+```lua
+tag = "v0.*",  -- Any v0.x version
+```
+
+See [releases](https://github.com/jrollin/mistral-codestral.nvim/releases) for available versions.
+
 ## 📚 Documentation
 
 - **[CONFIGURATION.md](docs/CONFIGURATION.md)** - All config options with examples

@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test on Neovim v0.10.0
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Neovim v0.10.0
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: v0.10.0
+
+      - name: Verify Neovim installation
+        run: |
+          nvim --version
+          which nvim
+
+      - name: Run tests
+        run: |
+          chmod +x ./scripts/ci_test.sh
+          ./scripts/ci_test.sh
+
+      - name: Upload test logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs
+          path: /tmp/*.log
+
+  lint:
+    name: Lint Lua code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Lua
+        uses: leafo/gh-actions-lua@v10
+        with:
+          luaVersion: "5.1"
+
+      - name: Setup LuaRocks
+        uses: leafo/gh-actions-luarocks@v4
+
+      - name: Install StyLua
+        run: |
+          wget -O /tmp/stylua.zip https://github.com/JohnnyMorganz/StyLua/releases/latest/download/stylua-linux-x86_64.zip
+          unzip /tmp/stylua.zip -d /tmp
+          chmod +x /tmp/stylua
+          sudo mv /tmp/stylua /usr/local/bin/
+
+      - name: Check code formatting
+        run: |
+          stylua --check lua/ tests/
+
+      - name: Install Luacheck
+        run: luarocks install luacheck
+
+      - name: Run Luacheck
+        run: |
+          luacheck lua/ --globals vim

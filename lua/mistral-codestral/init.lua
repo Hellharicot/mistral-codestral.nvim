@@ -1,6 +1,9 @@
 -- lua/mistral-codestral/init.lua
 local M = {}
 
+-- Plugin version (managed by release-please)
+M.VERSION = "0.1.0" -- x-release-please-version
+
 -- Default configuration
 local default_config = {
 	api_key = nil, -- Set via environment variable MISTRAL_API_KEY or config
@@ -149,6 +152,11 @@ end
 
 -- LSP workspace root detection
 local function find_workspace_root()
+	-- Safety check: ensure workspace_root config exists
+	if not config.workspace_root then
+		return vim.fn.getcwd()
+	end
+
 	if config.workspace_root.find_root then
 		local root = config.workspace_root.find_root()
 		if root then
@@ -172,7 +180,7 @@ local function find_workspace_root()
 	-- Fallback: search for workspace indicators
 	local current_dir = vim.fn.expand("%:p:h")
 	local function find_root(path)
-		for _, indicator in ipairs(config.workspace_root.paths) do
+		for _, indicator in ipairs(config.workspace_root.paths or {}) do
 			if vim.fn.glob(path .. "/" .. indicator) ~= "" then
 				return path
 			end
