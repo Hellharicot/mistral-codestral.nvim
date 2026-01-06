@@ -4,7 +4,6 @@
 local M = {}
 
 local function check_dependency(name, module_name, required)
-	local status = required and "ERROR" or "WARNING"
 	local ok, _ = pcall(require, module_name)
 
 	if ok then
@@ -38,13 +37,6 @@ local function check_binary(name, command)
 		vim.health.error(name .. " is not available in PATH")
 		return false
 	end
-end
-
--- Check API key (deprecated - now handled by auth module)
-local function check_api_key()
-	-- This function is kept for backward compatibility
-	local auth = require("mistral-codestral.auth")
-	return auth.get_api_key() ~= nil
 end
 
 function M.check()

@@ -120,7 +120,6 @@ function M.create_blink_items(completion, context, strategy, config)
 		kind = #lines > 1 and require("blink.cmp.types").CompletionItemKind.Snippet
 			or require("blink.cmp.types").CompletionItemKind.Text,
 		detail = string.format("Codestral • %s • %d lines", strategy, #lines),
-		source_name = "mistral_codestral",
 		documentation = {
 			kind = "markdown",
 			value = string.format(
@@ -186,7 +185,7 @@ end
 
 -- Check if blink.cmp is available and compatible
 local function is_blink_available()
-	local ok, blink = pcall(require, "blink.cmp")
+	local ok, _blink = pcall(require, "blink.cmp")
 	return ok
 end
 

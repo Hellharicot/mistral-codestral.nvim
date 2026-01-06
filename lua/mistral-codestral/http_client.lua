@@ -4,11 +4,11 @@
 local M = {}
 local errors = require("mistral-codestral.errors")
 
--- Helper: Wrap async operation with timeout
+-- Helper: Wrap async operation with timeout (currently unused, kept for future use)
 -- @param fn function The async operation (receives callback as parameter)
 -- @param timeout_ms number Timeout in milliseconds
 -- @param on_timeout function Called when timeout occurs
-local function with_timeout(fn, timeout_ms, on_timeout)
+local function _with_timeout(fn, timeout_ms, on_timeout)
 	local timer = vim.loop.new_timer()
 	local completed = false
 

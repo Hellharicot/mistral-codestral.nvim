@@ -67,7 +67,6 @@ end
 
 function source:complete(request, callback)
 	local mistral = require("mistral-codestral")
-	local mistral_config = mistral.config()
 
 	-- Get enhanced context with LSP information
 	local context = lsp_utils.get_enhanced_context()
@@ -98,15 +97,8 @@ function source:complete(request, callback)
 		lsp_active = #vim.lsp.get_active_clients({ bufnr = 0 }) > 0,
 	})
 
-	-- For comment-based completions, we might want different parameters
-	local request_params = {
-		model = config.model,
-		prompt = enhanced_context.prefix,
-		suffix = enhanced_context.suffix,
-		max_tokens = completion_strategy == "comment_based" and 512 or mistral_config.max_tokens,
-		temperature = completion_strategy == "comment_based" and 0.2 or mistral_config.temperature,
-		stop = mistral_config.stop_tokens,
-	}
+	-- Note: request_params could be used for future custom completion parameters
+	-- Currently using default mistral_config settings via request_completion
 
 	-- Make request to Mistral
 	mistral.request_completion(function(completion)

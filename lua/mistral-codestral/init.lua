@@ -100,7 +100,7 @@ local default_config = {
 }
 
 local config = {}
-local namespace_id = vim.api.nvim_create_namespace("mistral_codestral")
+local _namespace_id = vim.api.nvim_create_namespace("mistral_codestral")
 
 -- Constants for context extraction
 local CONTEXT_MAX_LINES = 100 -- Maximum lines of context to include

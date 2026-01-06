@@ -416,7 +416,7 @@ function M.save_to_encrypted_file(api_key)
 	file:close()
 
 	-- Set secure permissions (owner read-write only)
-	local ok, err = pcall(function()
+	local ok, _err = pcall(function()
 		if vim.system then
 			vim.system({ "chmod", "600", file_path }):wait()
 		else

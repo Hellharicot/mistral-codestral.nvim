@@ -315,11 +315,11 @@ end
 
 -- Check if cursor is in a specific LSP context (function, class, etc.)
 function M.get_cursor_context()
-	local bufnr = vim.api.nvim_get_current_buf()
+	local _bufnr = vim.api.nvim_get_current_buf()
 	local cursor = vim.api.nvim_win_get_cursor(0)
 	local row, col = cursor[1] - 1, cursor[2]
 
-	local params = {
+	local _params = {
 		textDocument = vim.lsp.util.make_text_document_params(),
 		position = { line = row, character = col },
 	}
