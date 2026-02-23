@@ -146,6 +146,7 @@ function M.validate_api_key(api_key, callback)
 		max_tokens = 1,
 		temperature = 0.0,
 	}
+
 	M.post("https://" .. endpoint .. ".mistral.ai/v1/fim/completions", {
 		headers = {
 			["Content-Type"] = "application/json",

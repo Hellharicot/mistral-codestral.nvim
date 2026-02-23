@@ -6,7 +6,7 @@ M.VERSION = "1.0.0" -- x-release-please-version
 
 -- Default configuration
 local default_config = {
-	endpoint = nil,
+	endpoint = "codestral",
 	api_key = nil, -- Set via environment variable MISTRAL_API_KEY or config
 	model = "codestral-latest",
 	max_tokens = 256,

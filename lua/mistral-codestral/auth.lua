@@ -153,7 +153,7 @@ local function get_from_config()
 			result.api_key = api_key
 		end
 	end
-	return result
+	return nil
 end
 
 -- Method 2: Get from environment variables
@@ -594,6 +594,7 @@ function M.auth_command(args)
 		else
 			log_error("No API key to validate")
 		end
+	else
 		log_error("Unknown auth command: " .. subcommand)
 		log_info("Available commands: status, set, clear, validate")
 	end
