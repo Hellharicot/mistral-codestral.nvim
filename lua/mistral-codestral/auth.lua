@@ -153,7 +153,7 @@ local function get_from_config()
 			result.api_key = api_key
 		end
 	end
-	return nil
+	return result
 end
 
 -- Method 2: Get from environment variables
