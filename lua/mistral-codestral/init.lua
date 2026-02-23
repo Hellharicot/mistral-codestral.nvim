@@ -6,6 +6,7 @@ M.VERSION = "1.0.0" -- x-release-please-version
 
 -- Default configuration
 local default_config = {
+	endpoint = nil,
 	api_key = nil, -- Set via environment variable MISTRAL_API_KEY or config
 	model = "codestral-latest",
 	max_tokens = 256,
@@ -477,13 +478,14 @@ local function make_request(data, callback)
 	local auth = require("mistral-codestral.auth")
 	local http_client = require("mistral-codestral.http_client")
 	local api_key = auth.get_api_key()
+	local endpoint = auth.get_endpoint()
 
 	if not api_key then
 		callback(nil, "API key not found. Set MISTRAL_API_KEY environment variable or configure api_key")
 		return
 	end
 
-	http_client.post("https://codestral.mistral.ai/v1/fim/completions", {
+	http_client.post("https://" .. endpoint .. ".mistral.ai/v1/fim/completions", {
 		headers = {
 			["Content-Type"] = "application/json",
 			["Authorization"] = "Bearer " .. api_key,
