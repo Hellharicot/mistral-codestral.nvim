@@ -67,6 +67,14 @@ local function run_tests()
 			-- end)
 			-- vim.wait(6000) -- Wait for async validation
 		end
+
+		local endpoint = auth.get_endpoint()
+		log_test("endpoint available: " .. endpoint, endpoint ~= nil and endpoint ~= "", "endpoint is nil")
+		log_test(
+			"endpoint is either 'codestral' or 'api'",
+			endpoint == "codestral" or endpoint == "api",
+			"Invalid endpoint value"
+		)
 	end
 
 	-- Test 4: Check blink.cmp integration
