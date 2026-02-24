@@ -122,7 +122,6 @@ end
 
 -- Method 1: Get from direct configuration
 local function get_from_config(param)
-	log_debug("paramètre reçu : " .. param)
 	local mistral_config = require("mistral-codestral").config()
 
 	if mistral_config and mistral_config[param] then
@@ -460,7 +459,7 @@ local function validate_endpoint(endpoint)
 end
 
 function M.get_endpoint()
-	if endpoint_cache ~= nil then
+	if endpoint_cache then
 		log_debug("Returning cached endpoint: " .. endpoint_cache)
 		return endpoint_cache
 	end
@@ -476,7 +475,7 @@ function M.get_api_key()
 	ensure_initialized()
 
 	-- Return cached key if available
-	if api_key_cache ~= nil then
+	if api_key_cache then
 		return api_key_cache
 	end
 
