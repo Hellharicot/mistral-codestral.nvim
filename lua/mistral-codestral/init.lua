@@ -166,7 +166,7 @@ local function find_workspace_root()
 	end
 
 	if config.workspace_root.use_lsp then
-		local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+		local clients = vim.lsp.get_clients({ bufnr = 0 })
 		if clients and #clients > 0 then
 			local workspace_folders = clients[1].config.workspace_folders
 			if workspace_folders and #workspace_folders > 0 then
@@ -199,7 +199,7 @@ end
 -- Get buffer language from LSP or filetype
 local function get_buffer_language()
 	-- Try to get language from LSP
-	local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+	local clients = vim.lsp.get_clients({ bufnr = 0 })
 	if clients and #clients > 0 then
 		local client = clients[1]
 		if client.config.filetypes then

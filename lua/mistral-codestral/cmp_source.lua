@@ -94,7 +94,7 @@ function source:complete(request, callback)
 	-- Enhanced request with LSP context
 	local enhanced_context = vim.tbl_extend("force", context, {
 		strategy = completion_strategy,
-		lsp_active = #vim.lsp.get_active_clients({ bufnr = 0 }) > 0,
+		lsp_active = #vim.lsp.get_clients({ bufnr = 0 }) > 0,
 	})
 
 	-- Note: request_params could be used for future custom completion parameters

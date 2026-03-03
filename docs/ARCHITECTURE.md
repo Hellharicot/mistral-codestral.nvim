@@ -500,7 +500,7 @@ nvim-cmp calls source:complete()
 ### With LSP
 
 ```lua
-We call vim.lsp.get_active_clients()
+We call vim.lsp.get_clients()
   │
   ├─ Get diagnostics
   ├─ Get symbols

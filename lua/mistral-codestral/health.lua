@@ -140,7 +140,7 @@ function M.check()
 
 	-- Check LSP integration
 	vim.health.start("LSP Integration")
-	local lsp_clients = vim.lsp.get_active_clients({ bufnr = 0 })
+	local lsp_clients = vim.lsp.get_clients({ bufnr = 0 })
 	if #lsp_clients > 0 then
 		vim.health.ok("LSP is active (" .. #lsp_clients .. " client(s))")
 		for _, client in ipairs(lsp_clients) do
