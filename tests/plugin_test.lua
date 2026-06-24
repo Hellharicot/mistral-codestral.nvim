@@ -114,14 +114,14 @@ local function run_tests()
 	if ok then
 		-- Create a test buffer (false, false = not listed, not scratch)
 		local test_buf = vim.api.nvim_create_buf(false, false)
-		vim.api.nvim_buf_set_option(test_buf, "filetype", "lua")
-		vim.api.nvim_buf_set_option(test_buf, "buftype", "") -- Normal buffer
+		vim.bo[test_buf].filetype = "lua"
+		vim.bo[test_buf].buftype = "" -- Normal buffer
 
 		local excluded = mistral.is_buffer_excluded(test_buf)
 		log_test("Normal buffer not excluded", not excluded, "Lua buffer was excluded")
 
 		-- Test excluded filetype
-		vim.api.nvim_buf_set_option(test_buf, "filetype", "help")
+		vim.bo[test_buf].filetype = "help"
 		excluded = mistral.is_buffer_excluded(test_buf)
 		log_test("Help buffer is excluded", excluded, "Help buffer not excluded")
 
@@ -138,7 +138,7 @@ local function run_tests()
 			"  ",
 			"}",
 		})
-		vim.api.nvim_buf_set_option(test_buf, "filetype", "javascript")
+		vim.bo[test_buf].filetype = "javascript"
 		vim.api.nvim_set_current_buf(test_buf)
 		vim.api.nvim_win_set_cursor(0, { 3, 2 }) -- Position at line 3, col 2
 
@@ -165,7 +165,7 @@ local function run_tests()
 			"function sum(a, b) {",
 			"  ",
 		})
-		vim.api.nvim_buf_set_option(test_buf, "filetype", "javascript")
+		vim.bo[test_buf].filetype = "javascript"
 		vim.api.nvim_set_current_buf(test_buf)
 		vim.api.nvim_win_set_cursor(0, { 3, 2 })
 

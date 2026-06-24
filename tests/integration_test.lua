@@ -61,7 +61,7 @@ end)
 test("Buffer exclusion logic", function()
 	local mistral = require("mistral-codestral")
 	local buf = vim.api.nvim_create_buf(false, false)
-	vim.api.nvim_buf_set_option(buf, "filetype", "lua")
+	vim.bo[buf].filetype = "lua"
 	local excluded = mistral.is_buffer_excluded(buf)
 	assert(excluded == false, "Lua buffer wrongly excluded")
 	vim.api.nvim_buf_delete(buf, { force = true })
@@ -72,7 +72,7 @@ test("FIM context extraction", function()
 	local mistral = require("mistral-codestral")
 	local buf = vim.api.nvim_create_buf(false, false)
 	vim.api.nvim_buf_set_lines(buf, 0, -1, false, { "function test() {", "  ", "}" })
-	vim.api.nvim_buf_set_option(buf, "filetype", "javascript")
+	vim.bo[buf].filetype = "javascript"
 	vim.api.nvim_set_current_buf(buf)
 	vim.api.nvim_win_set_cursor(0, { 2, 2 })
 
