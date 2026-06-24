@@ -67,6 +67,30 @@ local function run_tests()
 			-- end)
 			-- vim.wait(6000) -- Wait for async validation
 		end
+
+		local endpoint = auth.get_endpoint()
+		log_test("endpoint available: " .. endpoint, endpoint ~= nil and endpoint ~= "", "endpoint is nil")
+		log_test(
+			"endpoint is either 'codestral' or 'api'",
+			endpoint == "codestral" or endpoint == "api",
+			"Invalid endpoint value"
+		)
+
+		-- Invalid endpoints must fall back to 'codestral' (not crash or pass through).
+		-- Silence the expected ERROR notify so it doesn't surface as a headless error.
+		config.endpoint = "not-a-real-endpoint"
+		auth.clear_cache()
+		local original_notify = vim.notify
+		vim.notify = function() end
+		local fallback = auth.get_endpoint()
+		vim.notify = original_notify
+		log_test(
+			"invalid endpoint falls back to 'codestral'",
+			fallback == "codestral",
+			"Expected 'codestral', got '" .. tostring(fallback) .. "'"
+		)
+		config.endpoint = "codestral"
+		auth.clear_cache()
 	end
 
 	-- Test 4: Check blink.cmp integration
@@ -90,14 +114,14 @@ local function run_tests()
 	if ok then
 		-- Create a test buffer (false, false = not listed, not scratch)
 		local test_buf = vim.api.nvim_create_buf(false, false)
-		vim.api.nvim_buf_set_option(test_buf, "filetype", "lua")
-		vim.api.nvim_buf_set_option(test_buf, "buftype", "") -- Normal buffer
+		vim.bo[test_buf].filetype = "lua"
+		vim.bo[test_buf].buftype = "" -- Normal buffer
 
 		local excluded = mistral.is_buffer_excluded(test_buf)
 		log_test("Normal buffer not excluded", not excluded, "Lua buffer was excluded")
 
 		-- Test excluded filetype
-		vim.api.nvim_buf_set_option(test_buf, "filetype", "help")
+		vim.bo[test_buf].filetype = "help"
 		excluded = mistral.is_buffer_excluded(test_buf)
 		log_test("Help buffer is excluded", excluded, "Help buffer not excluded")
 
@@ -114,7 +138,7 @@ local function run_tests()
 			"  ",
 			"}",
 		})
-		vim.api.nvim_buf_set_option(test_buf, "filetype", "javascript")
+		vim.bo[test_buf].filetype = "javascript"
 		vim.api.nvim_set_current_buf(test_buf)
 		vim.api.nvim_win_set_cursor(0, { 3, 2 }) -- Position at line 3, col 2
 
@@ -141,7 +165,7 @@ local function run_tests()
 			"function sum(a, b) {",
 			"  ",
 		})
-		vim.api.nvim_buf_set_option(test_buf, "filetype", "javascript")
+		vim.bo[test_buf].filetype = "javascript"
 		vim.api.nvim_set_current_buf(test_buf)
 		vim.api.nvim_win_set_cursor(0, { 3, 2 })
 

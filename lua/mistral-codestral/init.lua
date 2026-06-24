@@ -6,6 +6,7 @@ M.VERSION = "1.0.0" -- x-release-please-version
 
 -- Default configuration
 local default_config = {
+	endpoint = "codestral",
 	api_key = nil, -- Set via environment variable MISTRAL_API_KEY or config
 	model = "codestral-latest",
 	max_tokens = 256,
@@ -165,7 +166,7 @@ local function find_workspace_root()
 	end
 
 	if config.workspace_root.use_lsp then
-		local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+		local clients = vim.lsp.get_clients({ bufnr = 0 })
 		if clients and #clients > 0 then
 			local workspace_folders = clients[1].config.workspace_folders
 			if workspace_folders and #workspace_folders > 0 then
@@ -198,7 +199,7 @@ end
 -- Get buffer language from LSP or filetype
 local function get_buffer_language()
 	-- Try to get language from LSP
-	local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+	local clients = vim.lsp.get_clients({ bufnr = 0 })
 	if clients and #clients > 0 then
 		local client = clients[1]
 		if client.config.filetypes then
@@ -477,13 +478,14 @@ local function make_request(data, callback)
 	local auth = require("mistral-codestral.auth")
 	local http_client = require("mistral-codestral.http_client")
 	local api_key = auth.get_api_key()
+	local endpoint = auth.get_endpoint()
 
 	if not api_key then
 		callback(nil, "API key not found. Set MISTRAL_API_KEY environment variable or configure api_key")
 		return
 	end
 
-	http_client.post("https://codestral.mistral.ai/v1/fim/completions", {
+	http_client.post("https://" .. endpoint .. ".mistral.ai/v1/fim/completions", {
 		headers = {
 			["Content-Type"] = "application/json",
 			["Authorization"] = "Bearer " .. api_key,

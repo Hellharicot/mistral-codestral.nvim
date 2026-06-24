@@ -4,7 +4,7 @@
 local M = {}
 local errors = require("mistral-codestral.errors")
 
--- Cache for LSP clients (reduces repeated get_active_clients calls)
+-- Cache for LSP clients (reduces repeated get_clients calls)
 local client_cache = {
 	bufnr = nil,
 	clients = nil,
@@ -26,7 +26,7 @@ local function get_cached_clients(bufnr)
 	end
 
 	-- Fetch fresh clients
-	local ok, clients = pcall(vim.lsp.get_active_clients, { bufnr = bufnr })
+	local ok, clients = pcall(vim.lsp.get_clients, { bufnr = bufnr })
 	if not ok then
 		errors.warning(errors.CATEGORY.INTERNAL, "Failed to get LSP clients", { error = clients })
 		return {}

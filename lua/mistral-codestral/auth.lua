@@ -42,6 +42,7 @@ local default_auth_config = {
 local auth_config = {}
 local api_key_cache = nil
 local validation_cache = {}
+local endpoint_cache = nil
 
 -- Ensure auth_config is initialized with defaults
 local function ensure_initialized()
@@ -120,32 +121,35 @@ local function command_exists(cmd)
 end
 
 -- Method 1: Get from direct configuration
-local function get_from_config()
+local function get_from_config(param)
 	local mistral_config = require("mistral-codestral").config()
-	if mistral_config and mistral_config.api_key then
-		local api_key = mistral_config.api_key
 
-		-- Check if it's a command-based key (starts with "cmd:")
-		if type(api_key) == "string" and api_key:match("^cmd:") then
-			local command = api_key:sub(5) -- Remove "cmd:" prefix
-			log_debug("Executing command for API key retrieval [REDACTED]")
-
-			-- Use safe command execution
-			local key, success = safe_execute_command(command)
-
-			if success and key then
-				log_debug("Found API key from command: " .. sanitize_api_key(key))
-				return key
-			else
-				log_error("Command execution failed or returned empty result")
-			end
-			return nil
-		else
-			log_debug("Found API key in direct configuration: " .. sanitize_api_key(api_key))
-			return api_key
-		end
+	if mistral_config and mistral_config[param] then
+		local value = mistral_config[param]
+		return value
 	end
-	return nil
+end
+
+local function clean_api(api_key)
+	-- Check if it's a command-based key (starts with "cmd:")
+	if type(api_key) == "string" and api_key:match("^cmd:") then
+		local command = api_key:sub(5) -- Remove "cmd:" prefix
+		log_debug("Executing command for API key retrieval [REDACTED]")
+
+		-- Use safe command execution
+		local key, success = safe_execute_command(command)
+
+		if success and key then
+			log_debug("Found API key from command: " .. sanitize_api_key(key))
+			return key
+		else
+			log_error("Command execution failed or returned empty result")
+		end
+		return nil
+	else
+		log_debug("Found API key in direct configuration: " .. sanitize_api_key(api_key))
+		return api_key
+	end
 end
 
 -- Method 2: Get from environment variables
@@ -433,7 +437,41 @@ function M.save_to_encrypted_file(api_key)
 	return true
 end
 
+-- Endpoint configuration and validation
+local ALLOWED_ENDPOINTS = {
+	api = true,
+	codestral = true,
+}
+
+local function validate_endpoint(endpoint)
+	if not endpoint or endpoint == "" then
+		log_error("No endpoint set in config. Using default: codestral")
+		endpoint = "codestral"
+		return endpoint
+	end
+	if not ALLOWED_ENDPOINTS[endpoint] then
+		log_error("Invalid endpoint: " .. endpoint .. ". Using default: codestral")
+		endpoint = "codestral"
+		return endpoint
+	end
+	log_debug("Using endpoint from config: " .. endpoint)
+	return endpoint
+end
+
+function M.get_endpoint()
+	if endpoint_cache then
+		log_debug("Returning cached endpoint: " .. endpoint_cache)
+		return endpoint_cache
+	end
+
+	log_debug("Retrieving endpoint from user configuration")
+	local endpoint = get_from_config("endpoint")
+	endpoint_cache = validate_endpoint(endpoint)
+	return endpoint_cache
+end
+
 -- Main API key retrieval function
+
 function M.get_api_key()
 	ensure_initialized()
 
@@ -448,7 +486,8 @@ function M.get_api_key()
 		local key = nil
 
 		if method == "config" then
-			key = get_from_config()
+			key = get_from_config("api_key")
+			key = clean_api(key)
 		elseif method == "environment" then
 			key = get_from_environment()
 		elseif method == "keyring" then
@@ -509,6 +548,7 @@ end
 function M.clear_cache()
 	api_key_cache = nil
 	validation_cache = {}
+	endpoint_cache = nil
 	log_info("Authentication cache cleared")
 end
 
@@ -583,7 +623,8 @@ function M.get_current_method()
 		local key = nil
 
 		if method == "config" then
-			key = get_from_config()
+			key = get_from_config("api_key")
+			key = clean_api(key)
 		elseif method == "environment" then
 			key = get_from_environment()
 		elseif method == "keyring" then

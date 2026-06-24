@@ -145,7 +145,10 @@ function M.validate_api_key(api_key, callback)
 		temperature = 0.0,
 	}
 
-	M.post("https://codestral.mistral.ai/v1/fim/completions", {
+	-- Resolve at call time: setup() may not have run when this module was required
+	local endpoint = require("mistral-codestral.auth").get_endpoint()
+
+	M.post("https://" .. endpoint .. ".mistral.ai/v1/fim/completions", {
 		headers = {
 			["Content-Type"] = "application/json",
 			["Authorization"] = "Bearer " .. api_key,
