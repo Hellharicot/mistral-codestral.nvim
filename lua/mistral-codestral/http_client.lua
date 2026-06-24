@@ -3,8 +3,6 @@
 
 local M = {}
 local errors = require("mistral-codestral.errors")
-local auth = require("mistral-codestral.auth")
-local endpoint = auth.get_endpoint()
 
 -- Helper: Wrap async operation with timeout (currently unused, kept for future use)
 -- @param fn function The async operation (receives callback as parameter)
@@ -146,6 +144,9 @@ function M.validate_api_key(api_key, callback)
 		max_tokens = 1,
 		temperature = 0.0,
 	}
+
+	-- Resolve at call time: setup() may not have run when this module was required
+	local endpoint = require("mistral-codestral.auth").get_endpoint()
 
 	M.post("https://" .. endpoint .. ".mistral.ai/v1/fim/completions", {
 		headers = {

@@ -75,6 +75,22 @@ local function run_tests()
 			endpoint == "codestral" or endpoint == "api",
 			"Invalid endpoint value"
 		)
+
+		-- Invalid endpoints must fall back to 'codestral' (not crash or pass through).
+		-- Silence the expected ERROR notify so it doesn't surface as a headless error.
+		config.endpoint = "not-a-real-endpoint"
+		auth.clear_cache()
+		local original_notify = vim.notify
+		vim.notify = function() end
+		local fallback = auth.get_endpoint()
+		vim.notify = original_notify
+		log_test(
+			"invalid endpoint falls back to 'codestral'",
+			fallback == "codestral",
+			"Expected 'codestral', got '" .. tostring(fallback) .. "'"
+		)
+		config.endpoint = "codestral"
+		auth.clear_cache()
 	end
 
 	-- Test 4: Check blink.cmp integration

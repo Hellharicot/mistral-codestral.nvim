@@ -454,7 +454,7 @@ local function validate_endpoint(endpoint)
 		endpoint = "codestral"
 		return endpoint
 	end
-	log_debug("Successfully retrieved endpoint from config")
+	log_debug("Using endpoint from config: " .. endpoint)
 	return endpoint
 end
 
@@ -466,7 +466,8 @@ function M.get_endpoint()
 
 	log_debug("Retrieving endpoint from user configuration")
 	local endpoint = get_from_config("endpoint")
-	return validate_endpoint(endpoint)
+	endpoint_cache = validate_endpoint(endpoint)
+	return endpoint_cache
 end
 
 -- Main API key retrieval function
@@ -547,6 +548,7 @@ end
 function M.clear_cache()
 	api_key_cache = nil
 	validation_cache = {}
+	endpoint_cache = nil
 	log_info("Authentication cache cleared")
 end
 
