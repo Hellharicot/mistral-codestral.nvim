@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0](https://github.com/jrollin/mistral-codestral.nvim/compare/v1.0.0...v1.1.0) (2026-06-24)
+
+
+### Features
+
+* add endpoint configuration support ([d9a334a](https://github.com/jrollin/mistral-codestral.nvim/commit/d9a334ad319f1573627e068cf42878847b78a130))
+* adds endpoint parameter in config to allow user to choose whether to ([cd5fc6a](https://github.com/jrollin/mistral-codestral.nvim/commit/cd5fc6a6718a160416cd2a9af5bba38c04803973))
+
+
+### Bug Fixes
+
+* **endpoint:** resolve at call time and make cache functional ([31b9e1a](https://github.com/jrollin/mistral-codestral.nvim/commit/31b9e1aa63ffe031717a67e9c039c8e9336029d8))
+* minor fix to ensure repo passes luacheck ([ce71091](https://github.com/jrollin/mistral-codestral.nvim/commit/ce710919a902d3cbb119025c26c71963870ac73b))
+
+
+### Tests
+
+* adds test to endpoint configuration ([8208bd4](https://github.com/jrollin/mistral-codestral.nvim/commit/8208bd45c2344531c6c2ef2382b9068c3b67adf5))
+
+
+### Code Refactoring
+
+* applies SRP to get_from_config, adds validity check on endpoint, optimizes cache use ([7876368](https://github.com/jrollin/mistral-codestral.nvim/commit/78763689e9888fb5fe0ff0ff953da93628a43b16))
+* changes deprecated vim.lsp.get_active_clients() to vim.lsp.get_clients() ([c28175c](https://github.com/jrollin/mistral-codestral.nvim/commit/c28175ce15756450bd7171da7940297874bd1a72))
+* minor code clean up ([4d1e3bb](https://github.com/jrollin/mistral-codestral.nvim/commit/4d1e3bbc89274843aa6d85145fe8d2fc00bac11d))
+* replace deprecated nvim_buf_set_option with vim.bo ([db022e9](https://github.com/jrollin/mistral-codestral.nvim/commit/db022e9cc17f364c6c539a7b0eca83bd48a3e595))
+* streamlines commit to reduce number of changes ([87005a8](https://github.com/jrollin/mistral-codestral.nvim/commit/87005a84860d242e0b4d5e3cc022d778d40400a9))
+
 ## 1.0.0 (2026-01-06)
 
 
