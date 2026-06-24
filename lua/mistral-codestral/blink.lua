@@ -223,9 +223,11 @@ function M.setup_completion_engine(mistral_config)
 	then
 		-- Only register if blink.cmp wasn't the preferred choice
 		if engine_preference == "nvim-cmp" or engine_preference == "both" or not blink_cmp_ok then
-			local ok, cmp_source = pcall(require, "mistral-codestral.cmp_source_enhanced")
-			if ok and cmp_source.register(mistral_config) then
-				table.insert(engines_configured, "nvim-cmp")
+			local cmp_source_ok, cmp_source = pcall(require, "mistral-codestral.cmp_source")
+			if cmp_source_ok then
+				cmp_source.register(mistral_config)
+			else
+				vim.notify("Could make cmp_source for nvim-cmp: " .. cmp_source, vim.log.levels.WARN)
 			end
 		end
 	end
